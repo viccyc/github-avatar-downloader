@@ -35,7 +35,7 @@ function downloadImageByURL(url, filePath) {
          .on('end', function (response) {
            console.log('Download complete.');
          })
-         .pipe(fs.createWriteStream('./test.jpg'));               // Note 4
+         .pipe(fs.createWriteStream(filePath));               // Note 4
  }
 
 getRepoContributors("jquery", "jquery", function(err, result) {
