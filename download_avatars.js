@@ -3,12 +3,14 @@ var secrets = require('./secrets');
 var fs = require('fs');
 var myArgs = process.argv.slice(2);
 
+// make sure the command line arguments are input.
 if (myArgs.length !== 2) {
   return console.log("The program needs the repo owner and repo name as arguments!");
 }
 
 console.log('Welcome to the GitHub Avatar Downloader!');
 
+// get the contributors using the token in the secret file.
 function getRepoContributors(repoOwner, repoName, callback) {
   var options = {
     url: "https://api.github.com/repos/" + repoOwner + "/" + repoName + "/contributors",
@@ -31,6 +33,8 @@ function downloadImageByURL(url, filePath) {
          .on('error', function (err) {
            throw err;
          })
+        // just to show the user things are going on.
+        // Might be too much info?
          .on('response', function (response) {
            console.log('Downloading image...');
            console.log('Response Status Code: ', response.statusCode);
@@ -40,6 +44,8 @@ function downloadImageByURL(url, filePath) {
          .on('end', function (response) {
            console.log('Download complete.');
          })
+         // write to file which has been specified in
+         // getRepoContributors
          .pipe(fs.createWriteStream(filePath));
  }
 
