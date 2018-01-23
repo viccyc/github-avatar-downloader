@@ -1,6 +1,7 @@
 var request = require('request');
 var secrets = require('./secrets');
 var fs = require('fs');
+var myArgs = process.argv.slice(2);
 
 console.log('Welcome to the GitHub Avatar Downloader!');
 
@@ -23,10 +24,10 @@ function getRepoContributors(repoOwner, repoName, callback) {
 
 function downloadImageByURL(url, filePath) {
   request.get(url)
-         .on('error', function (err) {                                   // Note 2
+         .on('error', function (err) {
            throw err;
          })
-         .on('response', function (response) {                           // Note 3
+         .on('response', function (response) {
            console.log('Downloading image...');
            console.log('Response Status Code: ', response.statusCode);
            console.log('Response Message: ', response.statusMessage);
@@ -35,14 +36,14 @@ function downloadImageByURL(url, filePath) {
          .on('end', function (response) {
            console.log('Download complete.');
          })
-         .pipe(fs.createWriteStream(filePath));               // Note 4
+         .pipe(fs.createWriteStream(filePath));
  }
 
-getRepoContributors("jquery", "jquery", function(err, result) {
+getRepoContributors(myArgs[0], myArgs[1], function(err, result) {
   console.log("Errors:", err);
   let loginAvatarUrl = {};
   // iterate over the results
-  // for each avatar_url in the collection
+  // for each avatar_url in the collection and create jpeg files with images
   result.forEach(function(objAvatar) {
     loginAvatarUrl[objAvatar['login']] = objAvatar['avatar_url'];
   });
@@ -51,15 +52,3 @@ getRepoContributors("jquery", "jquery", function(err, result) {
   }
 });
 
-
-// function handleFilter(err, result) {
-//  let parsed = JSON.parse(result);
-//  let loginAvatarUrl = {};
-//  //cretes {'login name': 'avatar_url'} object
-//  parsed.forEach(function(contributor) {
-//    loginAvatarUrl[contributor['login']] = contributor['avatar_url'];
-//  });
-//  for (login in loginAvatarUrl) {
-//    downloadImageByURL(loginAvatarUrl[login], './avatars/' + login + '.jpg');
-//  }
-// }
