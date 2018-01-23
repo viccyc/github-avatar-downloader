@@ -3,6 +3,10 @@ var secrets = require('./secrets');
 var fs = require('fs');
 var myArgs = process.argv.slice(2);
 
+if (myArgs.length !== 2) {
+  return console.log("The program needs the repo owner and repo name as arguments!");
+}
+
 console.log('Welcome to the GitHub Avatar Downloader!');
 
 function getRepoContributors(repoOwner, repoName, callback) {
